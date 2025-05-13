@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 function App() {
 
   return (
-    <main className="flex h-screen  ">
+    <main className="flex h-screen justify-center mt-3 ">
      
       <h1>Vite + React</h1>
        <Routes>
