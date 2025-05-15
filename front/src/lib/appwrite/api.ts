@@ -28,7 +28,8 @@ export async function createUserAccount(user: INewUser) {
       name: newAccount.name,
       email: newAccount.email,
       username: user.username,
-      imageUrl: avatarUrl,
+      imageUrl: new URL(avatarUrl),
+      // imageUrl: avatarUrl,  errorr
     });
 
     return newUser;
@@ -63,7 +64,8 @@ export async function saveUserToDB(user: {
 // ============================== SIGN IN
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const session = await account.createEmailSession(user.email, user.password);
+    const session = await account.createSession(user.email, user.password);
+    // const session = await account.createEmailSession(user.email, user.password);
 
     return session;
   } catch (error) {
@@ -186,7 +188,8 @@ export function getFilePreview(fileId: string) {
       fileId,
       2000,
       2000,
-      "top",
+      // "top",  change to 
+      undefined,
       100
     );
 
@@ -289,8 +292,8 @@ export async function updatePost(post: IUpdatePost) {
         throw Error;
       }
 
-      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
-    }
+      image = { ...image, imageUrl: new URL(fileUrl), imageId: uploadedFile.$id };
+    }                        // was : fileUrl 
 
     // Convert tags into array
     const tags = post.tags?.replace(/ /g, "").split(",") || [];
