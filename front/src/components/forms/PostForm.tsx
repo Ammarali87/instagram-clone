@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { Models } from "appwrite";
+import type { Models } from "appwrite";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,10 +41,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
   });
 
   // Query
-  const { mutateAsync: createPost, isLoading: isLoadingCreate } =
-    useCreatePost();
-  const { mutateAsync: updatePost, isLoading: isLoadingUpdate } =
-    useUpdatePost();
+  const { mutateAsync: createPost, status: createPostStatus } = useCreatePost();
+  const isLoadingCreate = createPostStatus === "pending";
+  const { mutateAsync: updatePost, status: updatePostStatus } = useUpdatePost();
+  const isLoadingUpdate = updatePostStatus === "pending";
 
   // Handler
   const handleSubmit = async (value: z.infer<typeof PostValidation>) => {

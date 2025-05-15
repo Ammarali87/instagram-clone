@@ -9,7 +9,6 @@ function validateEndpoint(url: string | undefined) {
     throw new Error(`Invalid Appwrite URL: ${url}`);
   }
 }
-console.log("ENV URL:", import.meta.env.VITE_APPWRITE_URL);
 
 export const appwriteConfig = {
   url: validateEndpoint(import.meta.env.VITE_APPWRITE_URL),
@@ -24,8 +23,6 @@ export const appwriteConfig = {
 export const client = new Client();
 
 try {
-console.log("ENV URL:", import.meta.env.VITE_APPWRITE_URL);
-
   client.setEndpoint(appwriteConfig.url);
   client.setProject(appwriteConfig.projectId);
 } catch (error) {
