@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { createContext, useContext, useEffect, useState } from "react";
-import { IUser } from "@/types";
-import { getCurrentUser } from "@/lib/appwrite/api";
-
+import { createContext, useContext, useEffect, useState ,  } from "react";
+import type { IUser } from '../types';
+import { getCurrentUser } from "../lib/appwrite/api";
 
 type AuthContextState = {  // optional type
   user: IUser;   
@@ -25,10 +24,10 @@ export const INITIAL_USER: IUser = {
 
 // Initial context state with proper typing
 const INITIAL_STATE: AuthContextState = {
-  user: INITIAL_USER,
+  user: INITIAL_USER,   
+  setUser: () => null,
   isLoading: false,
   isAuthenticated: false,
-  setUser: () => null,
   setIsAuthenticated: () => null,
   checkAuthUser: async () => false,
 };
@@ -38,14 +37,14 @@ const AuthContext = createContext<AuthContextState>(INITIAL_STATE);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>(INITIAL_USER);
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const checkAuthUser = async (): Promise<boolean> => {
     setIsLoading(true);
-    try {   
+    try {      
       const currentAccount = await getCurrentUser();
-      
       if (!currentAccount) {
         setUser(INITIAL_USER);
         setIsAuthenticated(false);
@@ -59,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: currentAccount.email,
         imageUrl: currentAccount.imageUrl,
         bio: currentAccount.bio,
-      });
+      });   
       setIsAuthenticated(true);
       return true;
 
@@ -70,23 +69,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     } finally {
       setIsLoading(false);
-    }
+    }       
   };
 
   useEffect(() => {
     const checkAuth = async () => {
-      const cookieFallback = localStorage.getItem("cookieFallback");
+      const cookieFallback = localStorage.getItem("cookieFallback");  // i forgot
       if (!cookieFallback || cookieFallback === "[]") {
         navigate("/sign-in");
-        return;   
+        return;     // i forgot 
       }
-      await checkAuthUser();
+      await checkAuthUser();  // i forgot  // repeat  may he change data 
     };
 
     checkAuth();  // trigger your fun
   }, [navigate]);   // can remove 
 
-  const contextValue: AuthContextState = {  
+
+
+  const value = {  // can add type AuthContextState  
     user,
     setUser,
     isLoading,
@@ -96,23 +97,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (  // value={value}
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-}
+}          
 
-// Custom hook with better error handling
-export const useUserContext = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useUserContext must be used within an AuthProvider");
-  }
-  return context;
-};
+// Custom hook   
+export const useUserContext = () => useContext(AuthContext); //1 // three stuff
 
-// Custom hook
-// export const useUserContext = () => useContext(AuthContext); //1 // three stuff
+// Custom hook  can also be with better error handling
+
+// export const useUserContext = () => {
+//   const context = useContext(AuthContext);
+//   if (!context) {  // optional 
+//     throw new Error("useUserContext must be used within an AuthProvider");
+//   }
+//   return context;
+// };
 
 
 

@@ -1,8 +1,3 @@
-
-
-
-
-
 import { Outlet, Navigate } from "react-router-dom";
 
 import { useUserContext } from "@/context/AuthContext";
