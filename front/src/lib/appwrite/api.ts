@@ -65,13 +65,24 @@ export async function saveUserToDB(user: {
 export async function signInAccount(user: { email: string; password: string }) {
   try {
     const session = await account.createSession(user.email, user.password);
-    // const session = await account.createEmailSession(user.email, user.password);
-
     return session;
   } catch (error) {
-    console.log(error);
+    console.error("Sign-in error:", error);
+    throw error; // Rethrow to handle in the UI
   }
 }
+
+
+// export async function signInAccount(user: { email: string; password: string }) {
+//   try {
+//     const session = await account.createSession(user.email, user.password);
+//     // const session = await account.createEmailSession(user.email, user.password);
+
+//     return session;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 // ============================== GET ACCOUNT
 export async function getAccount() {
@@ -107,15 +118,26 @@ export async function getCurrentUser() {
 }
 
 // ============================== SIGN OUT
+
 export async function signOutAccount() {
   try {
     const session = await account.deleteSession("current");
-
     return session;
   } catch (error) {
-    console.log(error);
+    console.error("Error signing out:", error);
+    throw error; // Rethrow the error so mutation can handle it
   }
 }
+
+// export async function signOutAccount() {
+//   try {
+//     const session = await account.deleteSession("current");
+
+//     return session;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 // ============================================================
 // POSTS

@@ -46,10 +46,25 @@ export const useSignInAccount = () => {
 };
 
 export const useSignOutAccount = () => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: signOutAccount,
+    onSuccess: () => {
+      // Clear all queries from cache on successful logout
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error("Sign out error:", error);
+    }
   });
 };
+
+// export const useSignOutAccount = () => {
+//   return useMutation({
+//     mutationFn: signOutAccount,
+//   });
+// };
 
 // ============================================================
 // POST QUERIES
